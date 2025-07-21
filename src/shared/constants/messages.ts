@@ -1,0 +1,16 @@
+export const MESSAGES = {
+  ROUTE_NOT_FOUND: 'Route not found',
+  INTERNAL_ERROR: 'Internal Server Error',
+  USER_CREATED: 'User created successfully',
+  USER_ALREADY_EXISTS: 'User already exists with this email',
+  INVALID_EMAIL: 'Invalid email format',
+  INVALID_PASSWORD: 'Password must be at least 8 characters long',
+  AUTH_REQUIRED: 'Authentication required',
+  FORBIDDEN: 'You do not have permission to access this resource',
+  HEALTH_OK: 'OK',
+  UNKNOWN_ERROR: 'Unknown error',
+  CANNOT_COMPARE_UNHASHED_PASSWORD: 'Cannot compare unhashed password',
+  INVALID_UUID_FORMAT: 'Invalid UUID format',
+  INVALID_TOKEN: 'Invalid token',
+  AUTH_MODULE_STATUS: 'Auth module is up and running',
+} as const;

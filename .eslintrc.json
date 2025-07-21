@@ -1,0 +1,113 @@
+{
+  "env": {
+    "node": true,
+    "browser": true,
+    "es6": true
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
+  "extends": [
+    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/strict-type-checked",
+    "plugin:import/recommended",
+    "plugin:import/typescript",
+    "plugin:promise/recommended",
+    "prettier"
+  ],
+  "ignorePatterns": [
+    ".eslintrc.json",
+    "lint-staged.config.js",
+    "*.d.ts",
+    "dist",
+    "migrations/**.ts"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "sourceType": "module",
+    "ecmaVersion": 6
+  },
+  "globals": {
+    "fetch": false,
+    "Headers": false,
+    "window": false,
+    "document": false
+  },
+  "plugins": [
+    "@typescript-eslint/eslint-plugin",
+    "prettier",
+    "import",
+    "promise"
+  ],
+  "rules": {
+    "linebreak-style": ["error", "unix"],
+    "quotes": 0,
+    "semi": ["error", "always"],
+    "max-len": 0,
+    "object-curly-newline": 0,
+    "comma-dangle": 0,
+    "camelcase": 0,
+    "operator-linebreak": 0,
+    "radix": 0,
+    "indent": 0,
+    "no-shadow": 0,
+    "object-curly-spacing": 0,
+    "import/prefer-default-export": 0,
+    "curly": ["error", "all"],
+    "nonblock-statement-body-position": 0,
+    "array-callback-return": 0,
+    "implicit-arrow-linebreak": 0,
+    "consistent-return": 0,
+    "no-underscore-dangle": 0,
+    "jsx-a11y/click-events-have-key-events": 0,
+    "jsx-a11y/no-static-element-interactions": 0,
+    "@typescript-eslint/naming-convention": 0,
+    "comma-style": 0,
+    "template-curly-spacing": 0,
+    "no-confusing-arrow": 0,
+    "no-param-reassign": 0,
+    "jsx-a11y/anchor-is-valid": 0,
+    "quote-props": 0,
+    "function-paren-newline": 0,
+    "no-return-assign": 0,
+    "no-sequences": 0,
+    "jsx-a11y/label-has-associated-control": 0,
+    "jsx-a11y/media-has-caption": 0,
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-var-requires": "off",
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      { "argsIgnorePattern": "^_" }
+    ],
+    "@typescript-eslint/ban-types": "error",
+    "@typescript-eslint/consistent-type-assertions": "error",
+    "import/no-extraneous-dependencies": [
+      "error",
+      {
+        "devDependencies": true,
+        "optionalDependencies": false,
+        "peerDependencies": false,
+        "packageDir": "./"
+      }
+    ],
+    "no-restricted-exports": "off",
+    "import/no-unresolved": "off",
+    "@typescript-eslint/ban-ts-comment": 0,
+    "no-empty-function": ["error", { "allow": ["asyncMethods"] }],
+    "no-throw-literal": "error",
+    "require-await": "error",
+    "jsx-no-lambda": 0,
+    "no-angle-bracket-type-assertion": 0,
+    "ordered-imports": 0,
+    "object-literal-sort-keys": 0,
+    "member-access": 0,
+    "no-empty": 0,
+    "one-variable-per-declaration": 0,
+    "variable-name": 0,
+    "no-var-requires": 0,
+    "@typescript-eslint/no-namespace": 0
+  }
+}

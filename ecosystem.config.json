@@ -1,0 +1,30 @@
+{
+  "apps": [
+    {
+      "name": "server",
+      "script": "./dist/src/index.js",
+      "instances": "max",
+      "autorestart": false,
+      "watch": "./dist/**/*.js",
+      "env": {
+        "NODE_ENV": "development"
+      },
+      "env_production": {
+        "NODE_ENV": "production"
+      }
+    },
+    {
+      "name": "server-watcher",
+      "script": "pnpm start",
+      "instances": 1,
+      "autorestart": false,
+      "watch": "tsconfig.json",
+      "env": {
+        "NODE_ENV": "development"
+      },
+      "env_production": {
+        "NODE_ENV": "production"
+      }
+    }
+  ]
+}

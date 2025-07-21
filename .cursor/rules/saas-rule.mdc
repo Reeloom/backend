@@ -1,0 +1,80 @@
+# Reeloom SaaS – Cursor Rules
+
+# Architecture: DDD + Clean + Hexagonal
+
+# Backend: Node.js + TypeScript + Fastify + Prisma
+
+# Frontend: React + TypeScript + Vite
+
+[tech-stack]
+backend = Node.js, TypeScript, Prisma, Fastify, PostgreSQL
+frontend = React, TypeScript, Vite, TailwindCSS
+infra = Docker, Redis, JWT, GitHub Actions, PNPM
+
+[structure]
+architecture = Domain-Driven Design, Clean Architecture, Hexagonal Architecture
+modules = Each domain is isolated under src/modules/_
+shared = Reusable code in src/shared/_
+boundaries = Communication between modules only via interfaces defined in shared/
+
+[naming]
+entity = Singular, PascalCase (ex: User, Post)
+value-object = Descriptive, PascalCase (ex: Email, Password)
+use-case = Verb + Noun + UseCase (ex: CreateUserUseCase)
+controller = Verb + Noun + Controller (ex: CreateUserController)
+interface = Prefix with I (ex: IUserRepository)
+repository = TechPrefix + Entity (ex: PrismaUserRepository)
+event = PascalCase singular (ex: PostCreated)
+
+[testing]
+unit = Required for all use-cases and domain services
+integration = Required for repositories and endpoints
+tools = Vitest or Jest, Supertest
+
+[coding]
+style = ESLint + Prettier required
+types = Always use explicit typing, avoid any and as
+exceptions = Use domain-specific error classes (ex: UserAlreadyExistsError)
+validation = Only on edges (DTOs), use Zod or Class-validator
+async = Always use try/catch, consider Result pattern for flows
+
+[constants]
+hardcoded-strings = Forbidden under all circumstances
+shared-constants = All shared values (roles, statuses, slugs, etc.) must be defined in shared/constants/\*
+module-constants = Module-specific constants must live under moduleName/constants/
+messages = All user-facing messages must use centralized Intl keys (see [i18n])
+
+[infrastructure]
+controllers = Only handle request parsing and call use-case
+routes = Register routes using adapters (Fastify-based)
+di = Use factory + container pattern for dependency injection
+env = dotenv-safe + schema validation with Zod
+
+[communication]
+api = Use OpenAPI + Swagger for documentation
+contracts = Contracts First, shared via shared/dto
+
+[i18n]
+tooling = Use Intl format (ex: react-intl or i18next)
+source = All strings must be referenced via keys (ex: intl.t('errors.invalidEmail'))
+structure = Shared messages in shared/i18n/, module-specific messages in moduleName/i18n/
+error-handling = All business errors must return translated messages using intl
+
+[ci]
+lint = ESLint check required in CI
+test = Tests must run on CI
+coverage = Minimum test coverage: 80%
+formatting = Prettier required
+
+[docs]
+module = Each module must have a README with overview and flow
+adr = Use Architecture Decision Records (ADRs) for technical decisions
+
+[versioning]
+api = Version routes via prefix (ex: /v1)
+internal = Use SemVer for internal libraries (if any)
+
+[deployment]
+environments = dev, staging, production
+healthcheck = Required health check endpoint per module
+monitoring = Logging (Pino), Metrics (Prometheus), Tracing (Jaeger)

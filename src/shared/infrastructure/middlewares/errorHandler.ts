@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import logger from '@/config/logger';
+import { logger } from '@/config/logger';
 import { MESSAGES } from '@/shared/constants/messages';
 
 export interface AppError extends Error {

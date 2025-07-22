@@ -7,11 +7,19 @@ services:
       NODE_ENV: development
       LOG_FORMAT: json
       LOG_LEVEL: info
+      PORT: 3000
+      JWT_SECRET: your_jwt_secret_here
+      JWT_ACCESS_EXPIRATION_MINUTES: 10080
+      REDIS_URL: redis://localhost:6379
     ports:
       - '3000:3000'
     volumes:
-      - .:/app
-      - /app/node_modules
-    command: nodemon --watch src src/server.ts
+      - ./src:/app/src
+      - ./prisma:/app/prisma
+      - ./package.json:/app/package.json
+      - ./tsconfig.json:/app/tsconfig.json
+      - ./pnpm-lock.yaml:/app/pnpm-lock.yaml
+      - ./.env.local:/app/.env.local
+    command: sh -c "pnpm exec prisma generate && nodemon --watch src src/server.ts"
     depends_on:
       - db

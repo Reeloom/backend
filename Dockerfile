@@ -15,7 +15,7 @@ COPY .env.local ./
 COPY tsconfig.json ./
 COPY . .
 
-RUN pnpm prisma generate
+ RUN pnpm prisma generate
 
 
 

@@ -5,9 +5,9 @@
       "@/*": ["./*"]
     },
     "outDir": "./dist",
-    "lib": ["DOM", "es2017"],
+    "lib": ["es2017"],
     "module": "commonjs",
-    "removeComments": false,
+    "removeComments": true,
     "moduleResolution": "node",
     "sourceMap": false,
     "allowJs": true,
@@ -22,12 +22,13 @@
     "noImplicitAny": true,
     "target": "es2017",
     "strictNullChecks": true,
-    "typeRoots": ["node_modules/@types"],
-    "downlevelIteration": true
+    "typeRoots": ["./node_modules/@types", "./src/types"],
+    "downlevelIteration": true,
+    "skipLibCheck": true
   },
   "ts-node": {
     "require": ["tsconfig-paths/register"]
   },
-  "include": ["src"],
-  "exclude": ["node_modues", "dist/**/*", "src/entities/*", "src/**/*.spec.ts"]
+  "include": ["src", "tests"],
+  "exclude": ["node_modules", "dist/**/*", "src/entities/*", "src/**/*.spec.ts"]
 }

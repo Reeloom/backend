@@ -13,4 +13,17 @@ export const MESSAGES = {
   INVALID_UUID_FORMAT: 'Invalid UUID format',
   INVALID_TOKEN: 'Invalid token',
   AUTH_MODULE_STATUS: 'Auth module is up and running',
+  INVALID_GOOGLE_ID: 'Invalid Google ID format',
+  GOOGLE_AUTH_FAILED: 'Google authentication failed',
+  USER_NOT_FOUND: 'User not found',
+  INVALID_JWT_TOKEN: 'Invalid JWT token',
+  JWT_TOKEN_EXPIRED: 'JWT token expired',
+  AUTHORIZATION_CODE_REQUIRED: 'Authorization code is required',
+  INVALID_INSTAGRAM_ID: 'Invalid Instagram ID',
+  INVALID_INSTAGRAM_TOKEN: 'Invalid Instagram token',
+  INSTAGRAM_AUTH_FAILED: 'Instagram authentication failed',
+  INVALID_AUTH_CODE: 'Invalid or missing authorization code.',
+  AUTH_ERROR: 'Authentication failed. Please try again.',
 } as const;
+
+export type MessageValue = (typeof MESSAGES)[keyof typeof MESSAGES];

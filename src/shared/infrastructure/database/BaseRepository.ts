@@ -2,7 +2,7 @@ import { IRepository } from '@/shared/domain/repositories/IRepository';
 import { BaseEntity } from '@/shared/domain/entities/BaseEntity';
 import { PrismaExtendedClient } from '@/database/prismaClient';
 
-export abstract class BaseRepository<T extends BaseEntity<any>>
+export abstract class BaseRepository<T extends BaseEntity<unknown>>
   implements IRepository<T>
 {
   protected prisma: PrismaExtendedClient;

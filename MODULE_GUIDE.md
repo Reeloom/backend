@@ -57,22 +57,18 @@ export class ProductId extends ValueObject<ProductIdProps> {
   private constructor(props: ProductIdProps) {
     super(props);
   }
-
   public static create(id: string): ProductId {
     if (!this.isValidUuid(id)) {
       throw new Error('Invalid UUID format');
     }
     return new ProductId({ value: id });
   }
-
   public static generate(): ProductId {
     return new ProductId({ value: uuidv4() });
   }
-
   get value(): string {
     return this.props.value;
   }
-
   private static isValidUuid(uuid: string): boolean {
     const uuidRegex =
       /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -106,11 +102,9 @@ export class Product extends BaseEntity<ProductProps> {
   ) {
     super(props, id?.value, createdAt, updatedAt);
   }
-
   public static create(props: ProductProps, id?: ProductId): Product {
     return new Product(props, id);
   }
-
   public static createFromPersistence(
     props: ProductProps,
     id: string,
@@ -119,39 +113,30 @@ export class Product extends BaseEntity<ProductProps> {
   ): Product {
     return new Product(props, ProductId.create(id), createdAt, updatedAt);
   }
-
   get name(): ProductName {
     return this.props.name;
   }
-
   get price(): Price {
     return this.props.price;
   }
-
   get description(): string | undefined {
     return this.props.description;
   }
-
   get isActive(): boolean {
     return this.props.isActive ?? true;
   }
-
   public activate(): void {
     this.props.isActive = true;
   }
-
   public deactivate(): void {
     this.props.isActive = false;
   }
-
   public updatePrice(newPrice: Price): void {
     this.props.price = newPrice;
   }
-
   public updateName(newName: ProductName): void {
     this.props.name = newName;
   }
-
   protected generateId(): string {
     return ProductId.generate().value;
   }
@@ -189,7 +174,6 @@ export class CreateProductRequest extends BaseDTO {
   ) {
     super();
   }
-
   validate(): boolean {
     return !!(this.name && this.price > 0 && this.name.length > 0);
   }
@@ -226,17 +210,14 @@ export class CreateProductUseCase
   implements ICommand<CreateProductRequest, CreateProductResponse>
 {
   constructor(private productRepository: IProductRepository) {}
-
   async execute(request: CreateProductRequest): Promise<CreateProductResponse> {
     const name = ProductName.create(request.name);
     const price = Price.create(request.price);
-
     // Check if the product already exists
     const existingProduct = await this.productRepository.findByName(name);
     if (existingProduct) {
       throw new Error('Product already exists with this name');
     }
-
     // Create the product
     const product = Product.create({
       name,
@@ -244,10 +225,8 @@ export class CreateProductUseCase
       description: request.description,
       isActive: true,
     });
-
     // Save to repository
     const savedProduct = await this.productRepository.save(product);
-
     return {
       id: savedProduct.id,
       name: savedProduct.name.value,
@@ -265,164 +244,14 @@ export class CreateProductUseCase
 #### 3.1 Repository (Implementation)
 
 ```typescript
-// src/modules/product/infrastructure/repositories/PrismaProductRepository.ts
-import { BaseRepository } from '../../../../shared/infrastructure/database/BaseRepository';
+// src/modules/product/infrastructure/repositories/InMemoryProductRepository.ts
 import { IProductRepository } from '../../domain/repositories/IProductRepository';
 import { Product } from '../../domain/entities/Product';
 import { ProductName } from '../../domain/value-objects/ProductName';
 import { Price } from '../../domain/value-objects/Price';
 
-export class PrismaProductRepository
-  extends BaseRepository<Product>
-  implements IProductRepository
-{
-  async findById(id: string): Promise<Product | null> {
-    const product = await this.prisma.product.findUnique({
-      where: { id },
-    });
-
-    if (!product) {
-      return null;
-    }
-
-    return Product.createFromPersistence(
-      {
-        name: ProductName.create(product.name),
-        price: Price.create(product.price),
-        description: product.description || undefined,
-        isActive: product.isActive,
-      },
-      product.id,
-      product.createdAt,
-      product.updatedAt,
-    );
-  }
-
-  async findAll(): Promise<Product[]> {
-    const products = await this.prisma.product.findMany();
-
-    return products.map((product) =>
-      Product.createFromPersistence(
-        {
-          name: ProductName.create(product.name),
-          price: Price.create(product.price),
-          description: product.description || undefined,
-          isActive: product.isActive,
-        },
-        product.id,
-        product.createdAt,
-        product.updatedAt,
-      ),
-    );
-  }
-
-  async save(entity: Product): Promise<Product> {
-    const product = await this.prisma.product.create({
-      data: {
-        id: entity.id,
-        name: entity.name.value,
-        price: entity.price.value,
-        description: entity.description,
-        isActive: entity.isActive,
-        createdAt: entity.createdAt,
-        updatedAt: entity.updatedAt,
-      },
-    });
-
-    return Product.createFromPersistence(
-      {
-        name: ProductName.create(product.name),
-        price: Price.create(product.price),
-        description: product.description || undefined,
-        isActive: product.isActive,
-      },
-      product.id,
-      product.createdAt,
-      product.updatedAt,
-    );
-  }
-
-  async update(entity: Product): Promise<Product> {
-    const product = await this.prisma.product.update({
-      where: { id: entity.id },
-      data: {
-        name: entity.name.value,
-        price: entity.price.value,
-        description: entity.description,
-        isActive: entity.isActive,
-        updatedAt: new Date(),
-      },
-    });
-
-    return Product.createFromPersistence(
-      {
-        name: ProductName.create(product.name),
-        price: Price.create(product.price),
-        description: product.description || undefined,
-        isActive: product.isActive,
-      },
-      product.id,
-      product.createdAt,
-      product.updatedAt,
-    );
-  }
-
-  async delete(id: string): Promise<void> {
-    await this.prisma.product.delete({
-      where: { id },
-    });
-  }
-
-  async findByName(name: ProductName): Promise<Product | null> {
-    const product = await this.prisma.product.findUnique({
-      where: { name: name.value },
-    });
-
-    if (!product) {
-      return null;
-    }
-
-    return Product.createFromPersistence(
-      {
-        name: ProductName.create(product.name),
-        price: Price.create(product.price),
-        description: product.description || undefined,
-        isActive: product.isActive,
-      },
-      product.id,
-      product.createdAt,
-      product.updatedAt,
-    );
-  }
-
-  async findActiveProducts(): Promise<Product[]> {
-    const products = await this.prisma.product.findMany({
-      where: { isActive: true },
-    });
-
-    return products.map((product) =>
-      Product.createFromPersistence(
-        {
-          name: ProductName.create(product.name),
-          price: Price.create(product.price),
-          description: product.description || undefined,
-          isActive: product.isActive,
-        },
-        product.id,
-        product.createdAt,
-        product.updatedAt,
-      ),
-    );
-  }
-
-  async exists(name: ProductName): Promise<boolean> {
-    const product = await this.prisma.product.findUnique({
-      where: { name: name.value },
-      select: { id: true },
-    });
-
-    return !!product;
-  }
+export class InMemoryProductRepository implements IProductRepository {
+  // Implement methods using in-memory storage or any DB client
 }
 ```
 
@@ -443,7 +272,6 @@ export class CreateProductController extends BaseController<
   constructor(useCase: CreateProductUseCase) {
     super(useCase);
   }
-
   protected buildRequest(req: Request): CreateProductRequest {
     return new CreateProductRequest(
       req.body.name,
@@ -451,7 +279,6 @@ export class CreateProductController extends BaseController<
       req.body.description,
     );
   }
-
   protected sendResponse(res: Response, response: CreateProductResponse): void {
     res.status(201).json({
       success: true,
@@ -468,13 +295,12 @@ export class CreateProductController extends BaseController<
 import { Router } from 'express';
 import { CreateProductController } from '../controllers/CreateProductController';
 import { CreateProductUseCase } from '../../application/use-cases/create-product/CreateProductUseCase';
-import { PrismaProductRepository } from '../repositories/PrismaProductRepository';
-import prisma from '../../../../database/prismaClient';
+import { InMemoryProductRepository } from '../repositories/InMemoryProductRepository';
 
 const router = Router();
 
 // Dependency injection
-const productRepository = new PrismaProductRepository(prisma);
+const productRepository = new InMemoryProductRepository();
 const createProductUseCase = new CreateProductUseCase(productRepository);
 const createProductController = new CreateProductController(
   createProductUseCase,
@@ -509,101 +335,23 @@ export function registerRoutes(app: Router) {
 
 ```typescript
 // src/shared/infrastructure/di/container.ts
-import { PrismaUserRepository } from '../../../modules/user/infrastructure/repositories/PrismaUserRepository';
-import { CreateUserUseCase } from '../../../modules/user/application/use-cases/create-user/CreateUserUseCase';
-import { CreateUserController } from '../../../modules/user/infrastructure/controllers/CreateUserController';
-import { PrismaProductRepository } from '../../../modules/product/infrastructure/repositories/PrismaProductRepository';
+import { InMemoryProductRepository } from '../../../modules/product/infrastructure/repositories/InMemoryProductRepository';
 import { CreateProductUseCase } from '../../../modules/product/application/use-cases/create-product/CreateProductUseCase';
 import { CreateProductController } from '../../../modules/product/infrastructure/controllers/CreateProductController';
-import prisma from '../../../database/prismaClient';
-
-// User Module Dependencies
-export const userRepository = new PrismaUserRepository(prisma);
-export const createUserUseCase = new CreateUserUseCase(userRepository);
-export const createUserController = new CreateUserController(createUserUseCase);
 
 // Product Module Dependencies
-export const productRepository = new PrismaProductRepository(prisma);
+export const productRepository = new InMemoryProductRepository();
 export const createProductUseCase = new CreateProductUseCase(productRepository);
 export const createProductController = new CreateProductController(
   createProductUseCase,
 );
 ```
 
-### 5. Update the Prisma Schema
-
-```prisma
-// prisma/schema.prisma
-model Product {
-  id          String   @id @default(uuid())
-  name        String   @unique
-  price       Decimal
-  description String?
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-}
-```
-
-## Conventions and Best Practices
-
-### 1. Naming
-
-- **Entities**: Singular name, PascalCase (`Product`, `User`)
-- **Value Objects**: Descriptive name, PascalCase (`ProductName`, `Email`)
-- **Use Cases**: Verb + Noun + UseCase (`CreateProductUseCase`)
-- **Controllers**: Verb + Noun + Controller (`CreateProductController`)
-- **Repositories**: Entity name + Repository (`ProductRepository`)
-
-### 2. File Structure
-
-- One use case per file
-- One controller per use case
-- One repository per entity
-- Value objects in separate files
-
-### 3. Validations
-
-- Domain validations in value objects
-- Input validations in DTOs
-- Business validations in use cases
-
-### 4. Error Handling
-
-- Domain-specific errors
-- Clear error messages
-- Structured logs
-
 ### 5. Tests
 
 - Unit tests for value objects and entities
 - Integration tests for use cases
 - API tests for controllers
-
-## Test Example
-
-```typescript
-// src/modules/product/__tests__/domain/value-objects/ProductName.test.ts
-import { ProductName } from '../../domain/value-objects/ProductName';
-
-describe('ProductName', () => {
-  it('should create a valid product name', () => {
-    const name = ProductName.create('Valid Product Name');
-    expect(name.value).toBe('Valid Product Name');
-  });
-
-  it('should throw error for empty name', () => {
-    expect(() => ProductName.create('')).toThrow(
-      'Product name cannot be empty',
-    );
-  });
-
-  it('should throw error for name too long', () => {
-    const longName = 'a'.repeat(101);
-    expect(() => ProductName.create(longName)).toThrow('Product name too long');
-  });
-});
-```
 
 ## Checklist for New Modules
 
@@ -617,7 +365,6 @@ describe('ProductName', () => {
 - [ ] Define routes
 - [ ] Register in the route system
 - [ ] Update DI container
-- [ ] Update Prisma schema
 - [ ] Write tests
 - [ ] Document API
 - [ ] Update architecture documentation

@@ -1,32 +1,30 @@
 import { Request, Response } from 'express';
-import { IUseCase, Result } from '@/shared/application/use-cases/IUseCase';
 
-export abstract class BaseController<TRequest, TResponse, E = Error> {
-  constructor(private useCase: IUseCase<TRequest, TResponse, E>) {}
+export abstract class BaseController<TRequest, TResponse> {
+  protected useCase: any;
+
+  constructor(useCase: any) {
+    this.useCase = useCase;
+  }
 
   async handle(req: Request, res: Response): Promise<void> {
     try {
       const request = this.buildRequest(req);
-      const response = await this.useCase.execute(request);
-      this.sendResponse(res, response);
-    } catch (error) {
+      const result = await this.useCase.execute(request);
+      this.sendResponse(res, result);
+    } catch (error: unknown) {
       this.handleError(res, error);
     }
   }
 
   protected abstract buildRequest(req: Request): TRequest;
-  protected abstract sendResponse(
-    res: Response,
-    response: Result<TResponse, E>,
-  ): void;
-
-  protected handleError(res: Response, error: any): void {
-    // Allow override for custom error handling
-    console.error('Controller error:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Internal server error',
-      error: process.env.NODE_ENV === 'development' ? error.message : undefined,
-    });
+  protected abstract sendResponse(res: Response, result: TResponse): void;
+  protected handleError(res: Response, error: unknown): void {
+    res
+      .status(500)
+      .json({
+        message:
+          error instanceof Error ? error.message : 'Internal server error',
+      });
   }
 }

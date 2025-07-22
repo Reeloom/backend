@@ -1,6 +1,6 @@
 import { BaseEntity } from '@/shared/domain/entities/BaseEntity';
 
-export interface IRepository<T extends BaseEntity<any>> {
+export interface IRepository<T extends BaseEntity<unknown>> {
   findById(id: string): Promise<T | null>;
   findAll(): Promise<T[]>;
   save(entity: T): Promise<T>;

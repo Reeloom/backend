@@ -3,6 +3,8 @@ import { IUserRepository } from '@/modules/user/domain/repositories/IUserReposit
 import { User } from '@/modules/user/domain/entities/User';
 import { Email } from '@/modules/user/domain/value-objects/Email';
 import { Password } from '@/modules/user/domain/value-objects/Password';
+import { OAUTH } from '@/shared/constants/oauth';
+import type { User as PrismaUser } from '@prisma/client';
 
 export class PrismaUserRepository
   extends BaseRepository<User>
@@ -20,7 +22,9 @@ export class PrismaUserRepository
     return User.createFromPersistence(
       {
         email: Email.create(user.email),
-        password: Password.createHashed(user.password),
+        password: Password.createHashed(
+          user.password ?? OAUTH.GOOGLE.PASSWORD_PLACEHOLDER,
+        ),
         name: user.name || undefined,
         isActive: user.isActive,
       },
@@ -33,11 +37,13 @@ export class PrismaUserRepository
   async findAll(): Promise<User[]> {
     const users = await this.prisma.user.findMany();
 
-    return users.map((user: any) =>
+    return users.map((user: PrismaUser) =>
       User.createFromPersistence(
         {
           email: Email.create(user.email),
-          password: Password.createHashed(user.password),
+          password: Password.createHashed(
+            user.password ?? OAUTH.GOOGLE.PASSWORD_PLACEHOLDER,
+          ),
           name: user.name || undefined,
           isActive: user.isActive,
         },
@@ -63,7 +69,9 @@ export class PrismaUserRepository
     return User.createFromPersistence(
       {
         email: Email.create(user.email),
-        password: Password.createHashed(user.password),
+        password: Password.createHashed(
+          user.password ?? OAUTH.GOOGLE.PASSWORD_PLACEHOLDER,
+        ),
         name: user.name || undefined,
         isActive: user.isActive,
       },
@@ -87,7 +95,9 @@ export class PrismaUserRepository
     return User.createFromPersistence(
       {
         email: Email.create(user.email),
-        password: Password.createHashed(user.password),
+        password: Password.createHashed(
+          user.password ?? OAUTH.GOOGLE.PASSWORD_PLACEHOLDER,
+        ),
         name: user.name || undefined,
         isActive: user.isActive,
       },
@@ -115,7 +125,9 @@ export class PrismaUserRepository
     return User.createFromPersistence(
       {
         email: Email.create(user.email),
-        password: Password.createHashed(user.password),
+        password: Password.createHashed(
+          user.password ?? OAUTH.GOOGLE.PASSWORD_PLACEHOLDER,
+        ),
         name: user.name || undefined,
         isActive: user.isActive,
       },
@@ -137,7 +149,9 @@ export class PrismaUserRepository
     return User.createFromPersistence(
       {
         email: Email.create(user.email),
-        password: Password.createHashed(user.password),
+        password: Password.createHashed(
+          user.password ?? OAUTH.GOOGLE.PASSWORD_PLACEHOLDER,
+        ),
         name: user.name || undefined,
         isActive: user.isActive,
       },

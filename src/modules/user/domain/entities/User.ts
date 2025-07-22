@@ -2,12 +2,14 @@ import { BaseEntity } from '@/shared/domain/entities/BaseEntity';
 import { Email } from '@/modules/user/domain/value-objects/Email';
 import { Password } from '@/modules/user/domain/value-objects/Password';
 import { UserId } from '@/modules/user/domain/value-objects/UserId';
+import { OAuthAccount } from '@/modules/user/domain/entities/OAuthAccount';
 
 export interface UserProps {
   email: Email;
   password: Password;
   name?: string;
   isActive?: boolean;
+  oauthAccounts?: OAuthAccount[];
 }
 
 export class User extends BaseEntity<UserProps> {
@@ -47,6 +49,10 @@ export class User extends BaseEntity<UserProps> {
 
   get isActive(): boolean {
     return this.props.isActive ?? true;
+  }
+
+  get oauthAccounts(): OAuthAccount[] | undefined {
+    return this.props.oauthAccounts;
   }
 
   public activate(): void {

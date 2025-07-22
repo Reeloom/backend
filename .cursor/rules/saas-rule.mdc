@@ -37,9 +37,10 @@ types = Always use explicit typing, avoid any and as
 exceptions = Use domain-specific error classes (ex: UserAlreadyExistsError)
 validation = Only on edges (DTOs), use Zod or Class-validator
 async = Always use try/catch, consider Result pattern for flows
+imports = Always import from the module global path (ex: @/modules..., @/shared...)
 
 [constants]
-hardcoded-strings = Forbidden under all circumstances
+hardcoded-strings = Forbidden under all circumstances always create constants so that you can use and share on necessary files
 shared-constants = All shared values (roles, statuses, slugs, etc.) must be defined in shared/constants/\*
 module-constants = Module-specific constants must live under moduleName/constants/
 messages = All user-facing messages must use centralized Intl keys (see [i18n])

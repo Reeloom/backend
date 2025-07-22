@@ -1,10 +1,11 @@
-import express from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import { loggerMiddleware } from '@/config/logger';
 import { errorHandler } from '@/shared/infrastructure/middlewares/errorHandler';
 import { registerRoutes } from '@/shared/infrastructure/routes/registerRoutes';
 import { HEADERS } from '@/shared/constants/headers';
+import cookieParser from 'cookie-parser';
 
 // Swagger/OpenAPI
 // NOTE: You must install 'swagger-ui-express' and create 'openapi.json' at the project root.
@@ -13,7 +14,6 @@ import { HEADERS } from '@/shared/constants/headers';
 
 // Prometheus
 import promClient from 'prom-client';
-import { Request, Response, NextFunction } from 'express';
 
 // Jaeger tracing stub
 function tracingMiddleware(req: Request, res: Response, next: NextFunction) {
@@ -29,6 +29,7 @@ export function createApp() {
   app.use(cors());
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
+  app.use(cookieParser());
 
   // Jaeger tracing stub
   app.use(tracingMiddleware);
@@ -42,9 +43,9 @@ export function createApp() {
   // Prometheus metrics endpoint
   const collectDefaultMetrics = promClient.collectDefaultMetrics;
   collectDefaultMetrics();
-  app.get('/api/v1/metrics', async (req, res) => {
-    res.set(HEADERS.CONTENT_TYPE, promClient.register.contentType);
-    res.end(await promClient.register.metrics());
+  app.get('/api/v1/metrics', async (req: Request, res: Response) => {
+    res.header(HEADERS.CONTENT_TYPE, promClient.register.contentType);
+    res.send(await promClient.register.metrics());
   });
 
   // Registro de rotas

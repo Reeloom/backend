@@ -1,4 +1,4 @@
-# Reeloom Backend
+# TargUp Backend
 
 ## Rodando Backend e Banco Separados
 

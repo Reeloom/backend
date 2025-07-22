@@ -4,9 +4,9 @@ services:
     image: postgres:15-alpine
     restart: always
     environment:
-      POSTGRES_DB: reeloom
-      POSTGRES_USER: reeloom
-      POSTGRES_PASSWORD: reeloom123
+      POSTGRES_DB: targup
+      POSTGRES_USER: targup
+      POSTGRES_PASSWORD: targup123
     ports:
       - '5432:5432'
     volumes:

@@ -3,7 +3,7 @@ services:
   app:
     build: .
     environment:
-      DATABASE_URL: postgres://reeloom:reeloom123@db:5432/reeloom
+      DATABASE_URL: postgres://targup:targup123@db:5432/targup
       NODE_ENV: development
       LOG_FORMAT: json
       LOG_LEVEL: info

@@ -1,9 +1,9 @@
 {
   "openapi": "3.0.0",
   "info": {
-    "title": "Reeloom Backend API",
+    "title": "TargUp Backend API",
     "version": "1.0.0",
-    "description": "API documentation for the Reeloom backend."
+    "description": "API documentation for the TargUp backend."
   },
   "servers": [
     {

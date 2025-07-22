@@ -1,4 +1,4 @@
-# Reeloom Backend Architecture
+# TargUp Backend Architecture
 
 ## Overview
 

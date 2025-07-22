@@ -1,5 +1,5 @@
 {
-  "name": "reeloom-backend",
+  "name": "targup-backend",
   "version": "1.0.0",
   "main": "dist/server.js",
   "scripts": {
@@ -30,7 +30,7 @@
     "docker:backend:down": "docker compose -f docker-compose.backend.yml down",
     "docker:all:up": "docker compose -f docker-compose.db.yml up -d && docker compose -f docker-compose.backend.yml up --build -d",
     "docker:all:down": "docker compose -f docker-compose.backend.yml down && docker compose -f docker-compose.db.yml down",
-    "docker:backend:rebuild": "docker compose -f docker-compose.backend.yml up --build -d",
+    "docker:backend:rebuild": "docker compose -f docker-compose.backend.yml -f docker-compose.db.yml up --build -d",
     "docker:db:rebuild": "docker compose -f docker-compose.db.yml up --build -d"
   },
   "dependencies": {
